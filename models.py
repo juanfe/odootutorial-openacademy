@@ -3,7 +3,9 @@
 from openerp import api
 from openerp.osv import fields, osv
 
-# class openacademy(models.Model):
-#     _name = 'openacademy.openacademy'
-
-#     name = fields.Char()
+class Course(osv.Model):
+    _name = 'openacademy.course'
+    _columns = {
+        'name' : fields.char('Title'),
+        'description' : fields.text('Description'),
+    }
