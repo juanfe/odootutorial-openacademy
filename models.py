@@ -26,4 +26,5 @@ class Session(osv.Model):
         'instructor_id' : fields.many2one('res.partner', string="Instructor"),
         'course_id' : fields.many2one('openacademy.course',
                 ondelete = "cascade", string = "Course", required = True),
+        'attendee_ids' : fields.many2many('res.partner', string='Attendees'),
     }
