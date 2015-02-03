@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp import api
+from openerp import api, exceptions
 from openerp.osv import fields, osv
 
 class Course(osv.Model):
@@ -58,3 +58,9 @@ class Session(osv.Model):
                     'message': "Increase seats or remove excess attendees",
                 },
             }
+
+    @api.one
+    @api.constrains('instructor_id', 'attendee_ids')
+    def _check_instructor_not_in_attendees(self):
+        if self.instructor_id and self.instructor_id in self.attendee_ids:
+            raise exceptions.ValidationError("A session's instructor can't be an attendee")
