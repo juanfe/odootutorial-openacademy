@@ -10,7 +10,9 @@ class Course(osv.Model):
         'description' : fields.text('Description'),
 
         'responsible_id' : fields.many2one('res.users',
-                on_delete="set null", string="Responsible", index=True) 
+                on_delete="set null", string="Responsible", index=True),
+        'session_ids' : fields.one2many('openacademy.session', 'course_id',
+                        string='Sessions'),
     }
 
 class Session(osv.Model):
