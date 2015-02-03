@@ -22,6 +22,7 @@ class Session(osv.Model):
         'start_date' : fields.date('Start date', default=fields.date.today),
         'duration' : fields.float('Duration', digits=(6,2), help="Duration in days"),
         'seats' : fields.integer(string="Number of seats"),
+        'active' : fields.boolean('Active', default=True),
 
         'instructor_id' : fields.many2one('res.partner', string="Instructor",
                 domain=['|', ('instructor', '=', True),
