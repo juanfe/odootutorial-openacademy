@@ -29,4 +29,14 @@ class Session(osv.Model):
         'course_id' : fields.many2one('openacademy.course',
                 ondelete = "cascade", string = "Course", required = True),
         'attendee_ids' : fields.many2many('res.partner', string='Attendees'),
+
+        'taken_seats' : fields.float(string="Taken seats", compute='_taken_seats'),
     }
+
+    @api.one
+    @api.depends('seats', 'attendee_ids')
+    def _taken_seats(self):
+        if not self.seats:
+            self.taken_seats = 0.0
+        else:
+            self.taken_seats = 100.0 * len (self.attendee_ids) / self.seats
