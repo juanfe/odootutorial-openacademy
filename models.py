@@ -15,6 +15,16 @@ class Course(osv.Model):
                         string='Sessions'),
     }
 
+    _sql_constraints = [
+            ('name_description_check',
+             'CHECK(name != description)',
+             "The title of teh course should not be teh description"),
+
+            ('name_unique',
+             'UNIQUE(name)',
+             "The course title must be unique"),
+            ]
+
 class Session(osv.Model):
     _name = 'openacademy.session'
     _columns = {
