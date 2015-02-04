@@ -48,6 +48,7 @@ class Session(osv.Model):
         'duration' : fields.float('Duration', digits=(6,2), help="Duration in days"),
         'seats' : fields.integer(string="Number of seats"),
         'active' : fields.boolean('Active', default=True),
+        'color' : fields.integer(),
 
         'instructor_id' : fields.many2one('res.partner', string="Instructor",
                 domain=['|', ('instructor', '=', True),
