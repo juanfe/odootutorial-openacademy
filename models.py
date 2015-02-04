@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 from openerp import api, exceptions
 from openerp.osv import fields, osv
 
@@ -59,6 +59,8 @@ class Session(osv.Model):
         'taken_seats' : fields.float(string="Taken seats", compute='_taken_seats'),
         'end_date' : fields.date(string="End Date", store=True,
                         compute='_get_end_date', inverse='_set_end_date'),
+
+        'hours' : fields.float('Duration in hours', compute='_get_hours', inverse='_set_hours'),
     }
 
     @api.one
@@ -95,7 +97,7 @@ class Session(osv.Model):
 
         # Add duration to start_date, but: Monday + 5 days = Saturday, so
         # subtract one second to get on Friday instead
-        start = fields.Datetime.from_string(self.start_date)
+        start = datetime.strptime(self.start_date, "%Y-%m-%d")
         duration = timedelta(days=self.duration, seconds=-1)
         self.end_date = start + duration
 
@@ -106,9 +108,18 @@ class Session(osv.Model):
 
         # Compute the difference between dates, bu: Friday = 4 days,
         # so add one day to get 5 days instead
-        start_date = fields.Datetime.from_string(self.start_date)
-        end_date = fields.Datetime.from_string(self.end_date)
+        start = datetime.strptime(self.start_date, "%Y-%m-%d")
+        end_date = datetime.strptime(self.end_date, "%Y-%m-%d")
         self.duration = (end_date - start_date).days + 1
+
+    @api.one
+    @api.depends('duration')
+    def _get_hours(self):
+        self.hours = self.duration * 24
+
+    @api.one
+    def _set_hours(self):
+        self.duration = self.hours / 24
 
     @api.one
     @api.constrains('instructor_id', 'attendee_ids')
