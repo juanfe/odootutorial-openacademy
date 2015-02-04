@@ -61,6 +61,9 @@ class Session(osv.Model):
                         compute='_get_end_date', inverse='_set_end_date'),
 
         'hours' : fields.float('Duration in hours', compute='_get_hours', inverse='_set_hours'),
+
+        'attendees_count' : fields.integer(
+                        string="Attendess count", compute='_get_attendees_count', store=True),
     }
 
     @api.one
@@ -120,6 +123,11 @@ class Session(osv.Model):
     @api.one
     def _set_hours(self):
         self.duration = self.hours / 24
+
+    @api.one
+    @api.depends('attendee_ids')
+    def _get_attendees_count(self):
+        self.attendees_count = len(self.attendee_ids)
 
     @api.one
     @api.constrains('instructor_id', 'attendee_ids')
